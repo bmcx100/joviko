@@ -7,7 +7,7 @@ import { Logo } from '@/components/shared/Logo'
 
 const navLinks = [
   { label: 'How It Works', href: '#how-it-works' },
-  { label: 'For Parents', href: '#for-parents' },
+  { label: 'Games', href: '#games' },
   { label: 'Pricing', href: '#pricing' },
 ]
 
@@ -38,7 +38,7 @@ export function Navbar() {
           href="#start"
           className="hidden md:block bg-brand-terracotta text-white font-heading font-bold text-xs px-5 py-2 rounded-button hover:bg-brand-terracotta-light transition-colors"
         >
-          Start Free Trial
+          Get started free
         </a>
 
         {/* Mobile hamburger */}
@@ -94,7 +94,7 @@ export function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="block w-full text-center bg-brand-terracotta text-white font-heading font-bold text-sm px-5 py-3 rounded-button hover:bg-brand-terracotta-light transition-colors"
               >
-                Start Free Trial
+                Get started free
               </a>
             </div>
           </motion.div>

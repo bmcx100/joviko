@@ -1,9 +1,11 @@
 export function TrustBar() {
   const items = [
-    { icon: '\u{1F6AB}', label: 'Zero ads, ever' },
-    { icon: '\u{1F512}', label: 'COPPA compliant' },
-    { icon: '\u{1F4CA}', label: 'Parent dashboard' },
-    { icon: '\u{1F989}', label: 'Guided by Owlbert' },
+    { icon: '\u2728', label: 'Free to start' },
+    { icon: '\uD83D\uDCDA', label: 'Curriculum aligned' },
+    { icon: '\uD83D\uDD12', label: 'COPPA compliant' },
+    { icon: '\uD83D\uDEAB', label: 'No ads, ever' },
+    { icon: '\uD83D\uDCF1', label: 'No app store redirects' },
+    { icon: '\uD83D\uDEAB\uD83D\uDCB3', label: 'No in-app purchases' },
   ]
 
   return (
