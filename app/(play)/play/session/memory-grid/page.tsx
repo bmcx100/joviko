@@ -10,11 +10,20 @@ import MascotBubble from '@/components/play/MascotBubble'
 import type { Difficulty } from '@/lib/games/memoryGrid/types'
 
 export default function MemoryGridPage() {
-  const { state, revealTimeLeft, elapsedTime, startGame, tapTile } = useMemoryGrid()
+  const [viewTime, setViewTime] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('memoryGrid:viewTime')
+      if (stored) return parseInt(stored, 10)
+    }
+    return 10
+  })
+  const { state, revealTimeLeft, elapsedTime, startGame, tapTile } = useMemoryGrid(viewTime)
   const [finalTime, setFinalTime] = useState(0)
 
   const handleStart = useCallback(
-    (difficulty: Difficulty) => {
+    (difficulty: Difficulty, selectedViewTime: number) => {
+      setViewTime(selectedViewTime)
+      localStorage.setItem('memoryGrid:viewTime', String(selectedViewTime))
       setFinalTime(0)
       startGame(difficulty)
     },
@@ -38,7 +47,7 @@ export default function MemoryGridPage() {
         difficulty={state.difficulty}
         rows={state.rows}
         cols={state.cols}
-        onPlayAgain={() => handleStart(state.difficulty)}
+        onPlayAgain={() => handleStart(state.difficulty, viewTime)}
       />
     )
   }
@@ -66,17 +75,6 @@ export default function MemoryGridPage() {
         <Grid state={state} onTapTile={tapTile} />
       </div>
 
-      <div className="px-5 pb-6">
-        <div
-          className="text-center font-mono font-semibold text-xs text-brand-pencil"
-          aria-live="polite"
-          role="status"
-        >
-          {state.phase === 'reveal' && 'Watch carefully...'}
-          {state.phase === 'walk' && `Row ${state.currentRow + 1} of ${state.rows}`}
-          {state.phase === 'failure' && 'Starting new attempt...'}
-        </div>
-      </div>
     </div>
   )
 }

@@ -11,15 +11,16 @@ import {
 } from './types'
 import type { Difficulty } from './types'
 
-export function useMemoryGrid() {
+export function useMemoryGrid(revealDuration?: number) {
+  const duration = revealDuration ?? REVEAL_DURATION
   const [state, dispatch] = useReducer(gameReducer, initialGameState)
-  const [revealTimeLeft, setRevealTimeLeft] = useState(REVEAL_DURATION)
+  const [revealTimeLeft, setRevealTimeLeft] = useState(duration)
 
   // Reveal countdown timer
   useEffect(() => {
     if (state.phase !== 'reveal') return
 
-    setRevealTimeLeft(REVEAL_DURATION)
+    setRevealTimeLeft(duration)
 
     const interval = setInterval(() => {
       setRevealTimeLeft((prev) => {
@@ -33,7 +34,7 @@ export function useMemoryGrid() {
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [state.phase, state.attempts])
+  }, [state.phase, state.attempts, duration])
 
   // Failure delay — auto-transition to new attempt
   useEffect(() => {
@@ -48,12 +49,12 @@ export function useMemoryGrid() {
 
   const startGame = useCallback((difficulty: Difficulty) => {
     const config = GRID_CONFIG[difficulty]
-    const path = generatePath(config.cols, config.rows)
+    const path = generatePath(config.cols, config.rows, config.pathLength)
     dispatch({ type: 'START_GAME', difficulty, path })
   }, [])
 
-  const tapTile = useCallback((col: number) => {
-    dispatch({ type: 'TAP_TILE', col })
+  const tapTile = useCallback((col: number, row: number) => {
+    dispatch({ type: 'TAP_TILE', row, col })
   }, [])
 
   const elapsedTime = state.startTime > 0 ? Date.now() - state.startTime : 0

@@ -7,13 +7,72 @@ import type { GameState } from '@/lib/games/memoryGrid/types'
 
 interface GridProps {
   state: GameState
-  onTapTile: (col: number) => void
+  onTapTile: (col: number, row: number) => void
 }
 
 const MemoTile = memo(Tile)
 
+function Minimap({ state }: { state: GameState }) {
+  const { cols, rows, path, currentStep, freshSteps, permanentSteps } = state
+  const cellSize = 6
+  const gap = 2
+  const width = cols * (cellSize + gap) - gap
+  const height = rows * (cellSize + gap) - gap
+
+  // Build a set of path positions for quick lookup
+  const pathMap = new Map<string, number>()
+  path.forEach((p, i) => pathMap.set(`${p.row},${p.col}`, i))
+
+  const cells = []
+  for (let visualRow = 0; visualRow < rows; visualRow++) {
+    const gameRow = rows - 1 - visualRow
+    for (let col = 0; col < cols; col++) {
+      const stepIndex = pathMap.get(`${gameRow},${col}`)
+      let fill = 'var(--color-brand-cream-dark)'
+      if (stepIndex !== undefined) {
+        if (freshSteps.has(stepIndex) || permanentSteps.has(stepIndex)) {
+          fill = 'var(--color-brand-success)'
+        } else {
+          fill = 'var(--color-brand-cream-dark)'
+        }
+      }
+      // Current position marker
+      const cur = path[currentStep]
+      if (cur && cur.row === gameRow && cur.col === col) {
+        fill = 'var(--color-brand-indigo)'
+      }
+
+      cells.push(
+        <rect
+          key={`${gameRow}-${col}`}
+          x={col * (cellSize + gap)}
+          y={visualRow * (cellSize + gap)}
+          width={cellSize}
+          height={cellSize}
+          rx={1}
+          fill={fill}
+        />
+      )
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <svg
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        className="rounded border border-brand-cream-dark/50"
+        style={{ maxHeight: '240px' }}
+      >
+        {cells}
+      </svg>
+    </div>
+  )
+}
+
 export default function Grid({ state, onTapTile }: GridProps) {
-  const { cols, rows, phase, currentRow, difficulty } = state
+  const { cols, rows, phase, difficulty } = state
   const gridRef = useRef<HTMLDivElement>(null)
   const [gridNaturalHeight, setGridNaturalHeight] = useState(0)
 
@@ -21,6 +80,9 @@ export default function Grid({ state, onTapTile }: GridProps) {
   const isReveal = phase === 'reveal'
   const isWalk = phase === 'walk'
   const gap = 4 // px
+
+  // Current position on the path for adjacency checks
+  const currentPos = isWalk ? state.path[state.currentStep] : null
 
   // Measure natural grid height for hard mode scaling
   useEffect(() => {
@@ -36,13 +98,14 @@ export default function Grid({ state, onTapTile }: GridProps) {
       ? Math.min(1, containerMaxHeight / gridNaturalHeight)
       : 0.4
 
-  // Walk phase: compute scroll offset to keep active row visible
-  // Visual row index (top = 0) for the active game row
-  const activeVisualRow = rows - 1 - currentRow
+  // Walk phase: show 8 rows for better visibility
+  const activeGameRow = currentPos ? currentPos.row : 0
+  const activeVisualRow = rows - 1 - activeGameRow
   const tileApproxSize = gridNaturalHeight > 0 ? gridNaturalHeight / rows : 48
-  const walkWindowHeight = 4 * tileApproxSize
-  // Position active row ~2 rows from bottom of window
-  const targetOffset = activeVisualRow * tileApproxSize - walkWindowHeight + 2 * tileApproxSize
+  const visibleRows = 10
+  const walkWindowHeight = visibleRows * tileApproxSize
+  // Position active row roughly centered in the window
+  const targetOffset = activeVisualRow * tileApproxSize - walkWindowHeight / 2 + tileApproxSize / 2
   const clampedOffset = Math.max(0, Math.min(targetOffset, gridNaturalHeight - walkWindowHeight))
 
   const gridTransform = isHard
@@ -51,7 +114,7 @@ export default function Grid({ state, onTapTile }: GridProps) {
       : `translateY(-${clampedOffset}px)`
     : 'none'
 
-  const gridOrigin = isHard && isReveal ? 'top center' : 'top center'
+  const gridOrigin = 'top center'
 
   // Render tiles: visual row 0 = top of screen = game row (rows-1)
   const tiles = []
@@ -59,13 +122,17 @@ export default function Grid({ state, onTapTile }: GridProps) {
     const gameRow = rows - 1 - visualRow
     for (let col = 0; col < cols; col++) {
       const tileState = getTileState(col, gameRow, state)
-      const interactive = isWalk && gameRow === currentRow
+      const isAdjacentToCurrent = isWalk && currentPos != null && (
+        (Math.abs(currentPos.row - gameRow) === 1 && currentPos.col === col) ||
+        (currentPos.row === gameRow && Math.abs(currentPos.col - col) === 1)
+      )
+      const interactive = isAdjacentToCurrent
       tiles.push(
         <MemoTile
           key={`${gameRow}-${col}`}
           state={tileState}
           interactive={interactive}
-          onClick={() => onTapTile(col)}
+          onClick={() => onTapTile(col, gameRow)}
         />
       )
     }
@@ -87,22 +154,30 @@ export default function Grid({ state, onTapTile }: GridProps) {
   )
 
   if (isHard) {
+    const showMinimap = isWalk || phase === 'failure'
     return (
-      <div
-        className="overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] mx-5"
-        style={{
-          height: isReveal || phase === 'idle' ? `${containerMaxHeight}px` : `${walkWindowHeight}px`,
-        }}
-      >
+      <div className="flex items-start justify-center gap-3">
         <div
-          className="transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
+          className="overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] flex-1"
           style={{
-            transform: gridTransform,
-            transformOrigin: gridOrigin,
+            height: isReveal || phase === 'idle' ? `${containerMaxHeight}px` : `${walkWindowHeight}px`,
           }}
         >
-          {gridElement}
+          <div
+            className="transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            style={{
+              transform: gridTransform,
+              transformOrigin: gridOrigin,
+            }}
+          >
+            {gridElement}
+          </div>
         </div>
+        {showMinimap && (
+          <div className="flex-shrink-0 pt-1">
+            <Minimap state={state} />
+          </div>
+        )}
       </div>
     )
   }
