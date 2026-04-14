@@ -1,6 +1,6 @@
 const productLinks = [
   { label: 'How It Works', href: '#how-it-works' },
-  { label: 'For Parents', href: '#for-parents' },
+  { label: 'Games', href: '#games' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'For Schools', href: '#schools' },
 ]
@@ -20,14 +20,12 @@ export function Footer() {
           {/* Column 1: Brand */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">&#x1F989;</span>
               <span className="font-heading font-bold text-brand-parchment text-[17px]">
-                Story Quest
+                Joviko
               </span>
             </div>
             <p className="font-body text-sm text-brand-parchment/60 leading-relaxed max-w-[300px]">
-              Educational games that develop critical thinking through
-              story-driven quests.
+              Fun games for kids. Guided learning for parents.
             </p>
           </div>
 
@@ -67,7 +65,7 @@ export function Footer() {
         {/* Legal */}
         <div className="mt-8 pt-4 border-t border-brand-parchment/10">
           <p className="font-mono text-[11px] text-brand-parchment/40">
-            &copy; 2026 Story Quest. All rights reserved.
+            &copy; 2026 Joviko. All rights reserved.
           </p>
         </div>
       </div>

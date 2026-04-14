@@ -14,7 +14,7 @@ export function Logo({ className, size = 'md' }: LogoProps) {
           size === 'md' ? 'w-8 h-8 text-lg' : 'w-7 h-7 text-base'
         )}
       >
-        🦉
+        <span className="font-heading font-extrabold leading-none">J</span>
       </div>
       <span
         className={cn(
@@ -22,7 +22,7 @@ export function Logo({ className, size = 'md' }: LogoProps) {
           size === 'md' ? 'text-[17px]' : 'text-[15px]'
         )}
       >
-        Story Quest
+        Joviko
       </span>
     </div>
   )

@@ -26,7 +26,7 @@ export const mockGames = [
   { id: '1', name: 'Number Patterns', desc: 'Find the missing number in each sequence', icon: '🔢', color: 'brand-indigo', questions: 10, minutes: 5, locked: true, href: '/play/session' },
   { id: '2', name: 'Addition Quest', desc: 'Add numbers up to 20', icon: '➕', color: 'brand-terracotta', questions: 10, minutes: 5, locked: true, href: '/play/session' },
   { id: '3', name: 'Shape Explorer', desc: 'Identify and compare shapes', icon: '🔷', color: 'brand-success', questions: 10, minutes: 5, locked: true, href: '/play/session' },
-  { id: '4', name: 'Story Time', desc: 'Reading comprehension adventure', icon: '🔒', color: 'brand-cream-dark', questions: 10, minutes: 5, locked: true, href: '#' },
+  { id: '4', name: 'Word Explorer', desc: 'Build vocabulary through word puzzles', icon: '🔒', color: 'brand-cream-dark', questions: 10, minutes: 5, locked: true, href: '#' },
 ]
 
 export const mockChild = {

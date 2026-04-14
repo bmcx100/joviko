@@ -1,4 +1,4 @@
-# Zinq — Future Upgrades
+# Joviko — Future Upgrades
 
 ## SDK / Widget
 - Embeddable SDK/widget for other app developers (ad network model — questions instead of ads)

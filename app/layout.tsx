@@ -15,8 +15,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Story Quest',
-  description: 'Educational games that develop critical thinking through story-driven quests',
+  title: 'Joviko',
+  description: 'Fun games for kids. Transparent, guided learning for parents. No ads, ever.',
 }
 
 export default function RootLayout({
