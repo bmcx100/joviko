@@ -5,40 +5,40 @@ import { cn } from '@/lib/utils'
 
 const tiers = [
   {
-    name: 'Starter',
-    price: 'Free',
-    period: '1 child, limited topics',
+    name: 'Free',
+    price: '$0',
+    period: 'forever',
     features: [
-      '1 child profile',
-      '3 topics',
-      'Basic progress tracking',
-      '5 sessions per week',
+      'All games',
+      'Basic progress reports',
+      'Grade-level questions',
+      'Unlimited play',
     ],
-    cta: 'Get Started',
+    cta: 'Get started free',
     highlighted: false,
   },
   {
-    name: 'Family',
+    name: 'Pro',
     price: '$9',
     period: 'per month',
     features: [
-      'Up to 4 children',
-      'All topics',
-      'Full parent dashboard',
-      'Unlimited sessions',
+      'Everything in Free',
+      'Custom curriculum matching',
+      'Full progress dashboard',
+      'School-specific content',
     ],
-    cta: 'Start Free Trial',
+    cta: 'Start Pro',
     highlighted: true,
   },
   {
-    name: 'School',
-    price: '$4',
+    name: 'Groups',
+    price: 'Custom',
     period: 'per student / month',
     features: [
+      'Everything in Pro',
       'Unlimited students',
       'Teacher dashboard',
-      'Curriculum alignment',
-      'Admin controls',
+      'Volume discounts',
     ],
     cta: 'Contact Us',
     highlighted: false,
@@ -47,7 +47,7 @@ const tiers = [
 
 export function PricingGrid() {
   return (
-    <section className="py-20 lg:py-28">
+    <section id="pricing" className="py-20 lg:py-28">
       <h2 className="font-heading font-extrabold text-[32px] text-center mb-12 text-brand-ink">
         Simple Pricing
       </h2>
