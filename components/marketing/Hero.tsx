@@ -75,10 +75,10 @@ export function Hero() {
 
           <motion.div {...stagger(2)}>
             <a
-              href="#start"
+              href="/play/session/memory-grid"
               className="bg-brand-terracotta text-white font-heading font-bold text-[15px] px-7 py-4 rounded-button mt-6 hover:bg-brand-terracotta-light transition-colors inline-block lg:inline-block w-full lg:w-auto text-center"
             >
-              Get started free
+              Try a game
             </a>
           </motion.div>
         </div>
