@@ -39,8 +39,8 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const protocol = request.nextUrl.protocol
 
-  // In development, skip domain routing so /play works on localhost
-  if (process.env.NODE_ENV === 'development' && !isGamesDomain(host)) {
+  // Skip domain routing when no games subdomain is configured
+  if (!isGamesDomain(host)) {
     return NextResponse.next()
   }
 
